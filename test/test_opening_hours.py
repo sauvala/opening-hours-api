@@ -1,5 +1,4 @@
 import unittest
-import json
 
 from src.opening_hours import format_opening_hours
 
