@@ -46,6 +46,7 @@ def flatten_hours(data: Dict[int, Any]) -> Dict[int, Any]:
 
 
 def set_opening_and_closing_time(data: Dict[int, Any]) -> Dict[int, Any]:
+    d = {}
     formatted_schedule = format_timestamps(data)
     for schedule_idx in formatted_schedule.keys():
         weekday_openings = formatted_schedule[schedule_idx]
@@ -62,15 +63,22 @@ def set_opening_and_closing_time(data: Dict[int, Any]) -> Dict[int, Any]:
                         opening_hour_str = opening["value"] + " - " + next_opening["value"]
                         opening_hours.append(opening_hour_str)
                 else:
-                    next_day = formatted_schedule[schedule_idx + 1]
-                    next_day_first_opening = next_day[0]
-                    if next_day_first_opening["type"] == "close":
-                        opening_hour_str = opening["value"] + " - " + next_day_first_opening["value"]
-                        opening_hours.append(opening_hour_str)
+                    if schedule_idx + 1 < len(formatted_schedule):
+                        next_day = formatted_schedule[schedule_idx + 1]
+                        next_day_first_opening = next_day[0]
+                        if next_day_first_opening["type"] == "close":
+                            opening_hour_str = opening["value"] + " - " + next_day_first_opening["value"]
+                            opening_hours.append(opening_hour_str)
+                    else:
+                        next_day = formatted_schedule[0]
+                        next_day_first_opening = next_day[0]
+                        if next_day_first_opening["type"] == "close":
+                            opening_hour_str = opening["value"] + " - " + next_day_first_opening["value"]
+                            opening_hours.append(opening_hour_str)
 
-        formatted_schedule[schedule_idx] = opening_hours
+        d[schedule_idx] = opening_hours
 
-    opening_schedules_as_strings = flatten_hours(formatted_schedule)
+    opening_schedules_as_strings = flatten_hours(d)
     return opening_schedules_as_strings
 
 
