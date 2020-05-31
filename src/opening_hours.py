@@ -51,8 +51,8 @@ def set_opening_and_closing_time(data: Dict[int, Any]) -> Dict[int, Any]:
 
         d[schedule_idx] = opening_hours
 
-    opening_schedules_as_strings = flatten_dict_values(d)
-    return opening_schedules_as_strings
+    opening_schedules_as_string = flatten_dict_values(d)
+    return opening_schedules_as_string
 
 
 def format_opening_hours(data: Dict[str, List]) -> Dict[str, Any]:
