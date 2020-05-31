@@ -54,6 +54,33 @@ class FormatOpeningHoursTestCase(unittest.TestCase):
         self.assertEqual("12 PM - 9 PM", formatted["Monday"])
         self.assertEqual("10 AM - 6 PM", formatted["Tuesday"])
 
+    def test_closing_time_on_next_day(self):
+        data = {
+            "saturday": [
+                {
+                    "type": "open",
+                    "value": 36000
+                },
+            ],
+            "sunday": [
+                {
+                    "type": "close",
+                    "value": 3600
+                },
+                {
+                    "type": "open",
+                    "value": 43200
+                },
+                {
+                    "type": "close",
+                    "value": 75600
+                }
+            ],
+        }
+        formatted = format_opening_hours(data)
+        self.assertEqual("10 AM - 1 AM", formatted["Saturday"])
+        self.assertEqual("12 PM - 9 PM", formatted["Sunday"])
+
 
 if __name__ == '__main__':
     unittest.main()
