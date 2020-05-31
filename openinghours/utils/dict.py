@@ -27,6 +27,6 @@ def capitalize_keys(data: Dict[str, Any]) -> Dict[str, Any]:
 def flatten_dict_values(data: Dict[int, Any]) -> Dict[int, Any]:
     d = {}
     for k, v in data.items():
-        value_as_string = ",".join(v)
+        value_as_string = ", ".join(v)
         d[k] = value_as_string
     return d
