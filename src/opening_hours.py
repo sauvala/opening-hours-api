@@ -46,19 +46,20 @@ def flatten_hours(data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def set_opening_and_closing_time(data: Dict[str, Any]) -> Dict[str, Any]:
-    d = format_timestamps(data)
-    for k, v in d.items():
+    formatted_schedule = format_timestamps(data)
+    schedule_iter = iter(formatted_schedule)
+    for weekday in schedule_iter:
         opening_hours = []
-        iter_v = iter(v)
-        for opening in iter_v:
-            next_opening = next(iter_v)
+        opening_hours_iter = iter(formatted_schedule[weekday])
+        for opening in opening_hours_iter:
+            next_opening = next(opening_hours_iter)
             if opening["type"] == "open" and next_opening["type"] == "close":
                 opening_hour = opening["value"] + " - " + next_opening["value"]
                 opening_hours.append(opening_hour)
-        d[k] = opening_hours
+        formatted_schedule[weekday] = opening_hours
 
-    hours_as_string = flatten_hours(d)
-    return hours_as_string
+    opening_schedules_as_strings = flatten_hours(formatted_schedule)
+    return opening_schedules_as_strings
 
 
 def capitalize_weekdays(data: Dict[str, Any]) -> Dict[str, Any]:
