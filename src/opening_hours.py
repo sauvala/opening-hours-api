@@ -1,6 +1,9 @@
 from datetime import datetime, timezone
 from typing import Dict, List, Any
 
+from src.dict_utils import map_schedule_weekday_keys_to_idx, map_schedule_idx_keys_to_weekdays, capitalize_keys, \
+    flatten_dict_values
+
 
 def format_time(timestamp: int) -> (int, int):
     time = datetime.fromtimestamp(timestamp, timezone.utc)
@@ -37,14 +40,6 @@ def format_timestamps(data: Dict[int, Any]) -> Dict[int, Any]:
     return d
 
 
-def flatten_hours(data: Dict[int, Any]) -> Dict[int, Any]:
-    d = {}
-    for k, v in data.items():
-        opening_hours_as_string = ",".join(v)
-        d[k] = opening_hours_as_string
-    return d
-
-
 def set_opening_and_closing_time(data: Dict[int, Any]) -> Dict[int, Any]:
     d = {}
     formatted_schedule = format_timestamps(data)
@@ -78,38 +73,15 @@ def set_opening_and_closing_time(data: Dict[int, Any]) -> Dict[int, Any]:
 
         d[schedule_idx] = opening_hours
 
-    opening_schedules_as_strings = flatten_hours(d)
+    opening_schedules_as_strings = flatten_dict_values(d)
     return opening_schedules_as_strings
 
 
-def capitalize_weekdays(data: Dict[str, Any]) -> Dict[str, Any]:
-    d = {}
-    for k, v in data.items():
-        d[k.capitalize()] = v
-    return d
-
-
-def map_schedule_keys_to_numbers(schedule: Dict[str, List]) -> (Dict[int, Any], List[str]):
-    d = {}
-    weekdays = []
-    for i, weekday in enumerate(schedule):
-        d[i] = schedule[weekday]
-        weekdays.append(weekday)
-    return d, weekdays
-
-
-def map_schedule_keys_to_weekdays(schedule: Dict[int, List], weekday_keys: List[str]) -> Dict[str, Any]:
-    d = {}
-    for idx in schedule.keys():
-        d[weekday_keys[idx]] = schedule[idx]
-    return d
-
-
 def format_opening_hours(data: Dict[str, List]) -> Dict[str, Any]:
-    schedule_with_int_keys, weekday_keys = map_schedule_keys_to_numbers(data)
+    schedule_with_int_keys, weekday_keys = map_schedule_weekday_keys_to_idx(data)
     with_opening_hours = set_opening_and_closing_time(schedule_with_int_keys)
-    schedule_with_weekday_keys = map_schedule_keys_to_weekdays(with_opening_hours,
-                                                               weekday_keys)
+    schedule_with_weekday_keys = map_schedule_idx_keys_to_weekdays(with_opening_hours,
+                                                                   weekday_keys)
     with_closed_days = mark_empty_days_closed(schedule_with_weekday_keys)
-    with_capitalized_days = capitalize_weekdays(with_closed_days)
+    with_capitalized_days = capitalize_keys(with_closed_days)
     return with_capitalized_days
