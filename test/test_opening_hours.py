@@ -1,6 +1,6 @@
 import unittest
 
-from src.opening_hours import format_opening_hours
+from openinghours.app.opening_hours import format_opening_hours
 
 
 class FormatOpeningHoursTestCase(unittest.TestCase):

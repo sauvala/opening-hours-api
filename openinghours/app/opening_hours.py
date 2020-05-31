@@ -1,8 +1,8 @@
 from typing import Dict, List, Any
 
-from src.dict_utils import map_schedule_weekday_keys_to_idx, map_schedule_idx_keys_to_weekdays, capitalize_keys, \
-    flatten_dict_values
-from src.format_utils import format_timestamps, format_opening_time
+from openinghours.utils.dict import map_schedule_weekday_keys_to_idx, map_schedule_idx_keys_to_weekdays, \
+    capitalize_keys, flatten_dict_values
+from openinghours.utils.formatting import format_timestamps, format_opening_time
 
 
 def mark_empty_days_closed(data: Dict[str, Any]) -> Dict[str, Any]:
